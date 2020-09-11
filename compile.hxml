@@ -18,6 +18,7 @@
 # -D doc_gen
 # -D js_classic
 -dce full
+-D mapMode
 
 # RM Version for Conditional Compilation
 
@@ -34,4 +35,13 @@
 -D compileMV
 -js dist/Luna_PressStartMV.js
 
---cmd haxe -D gamePath=games/KinoCreates --run CleanJs
+--next
+-D mapMode
+-js dist/Luna_PressStartMap.js
+
+--next
+-D mapMode
+-D compileMV
+-js dist/Luna_PressStartMapMV.js
+
+--cmd haxe -D gamePath=../games/LunaTechsMZ --run CleanJs

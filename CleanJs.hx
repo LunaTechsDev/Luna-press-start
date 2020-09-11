@@ -20,7 +20,7 @@ class CleanJs {
 
  static macro function generatePluginGamePath(): ExprOf<String> {
   var gamePath = Context.definedValue("gamePath");
-  if (gamePath.length < 1) {
+  if (gamePath.length > 1) {
    return macro $v{gamePath + "/js/plugins/"};
   } else {
    return macro $v{""};

@@ -1,3 +1,6 @@
+import core.Amaryllis;
+import rm.objects.Game_Player;
+import rm.scenes.Scene_Map;
 import rm.core.Input;
 import rm.core.TouchInput;
 import utils.Comment;
@@ -40,6 +43,7 @@ class LunaPressStart {
    yPosition: Fn.parseIntJs(params["Window Y Position"])
   };
 
+  #if !mapMode
   Comment.title("Scene_Title");
   var _SceneTitleCreate: JsFn = Fn.getPrProp(Scene_Title, "create");
   Fn.setPrProp(Scene_Title, "create", () -> {
@@ -77,6 +81,55 @@ class LunaPressStart {
     STitle._windowStart.deactivate();
    }
   });
+  #else
+  Comment.title("Scene_Map");
+  var _SceneMapCreateAllWindows: JsFn = cast Fn.getPrProp(Scene_Map,
+   "createAllWindows");
+  Fn.proto(Scene_Map).createAllWindowsD = () -> {
+   _SceneMapCreateAllWindows.call(Fn.self);
+   untyped Fn.self.createStartWindow();
+  }
+
+  Fn.setPrProp(Scene_Map, "createStartWindow", () -> {
+   var SMap: Dynamic = Fn.self;
+   var PSParams = LunaPressStart.PressStartParams;
+   SMap._windowStart = new LTWindowStart(PSParams.xPosition,
+    PSParams.yPosition, PSParams.windowWidth, PSParams.windowHeight);
+   SMap.addWindow(SMap._windowStart);
+  });
+
+  var _SceneMapIsBusy: JsFn = Fn.getPrProp(Scene_Map, "isBusy");
+  Fn.setPrProp(Scene_Map, "isBusy", () -> {
+   var SMap: Dynamic = Fn.self;
+   return SMap._windowStart.isOpen() || _SceneMapIsBusy.call(SMap);
+  });
+
+  var _SceneMapUpdate: JsFn = cast Fn.getPrProp(Scene_Map, "update");
+  Fn.setPrProp(Scene_Map, "update", () -> {
+   var SMap: Dynamic = Fn.self;
+   _SceneMapUpdate.call(SMap);
+   SMap.processStart();
+  });
+
+  Fn.setPrProp(Scene_Map, "processStart", () -> {
+   var SMap: Dynamic = Fn.self;
+   if (SMap._windowStart.isOpen()
+    && (TouchInput.isPressed() || Input.isTriggered("ok"))) {
+    SMap._windowStart.close();
+    SMap._windowStart.deactivate();
+   }
+  });
+
+  var _PlayerCanMove: JsFn = Fn.getPrProp(Game_Player, "canMove");
+  Fn.proto(Game_Player).canMoveD = () -> {
+   if (untyped Amaryllis.currentScene()._windowStart != null
+    && untyped Amaryllis.currentScene()._windowStart.isOpen()) {
+    return false;
+   } else {
+    return _PlayerCanMove.call(Fn.self);
+   }
+  };
+  #end
  }
 }
 

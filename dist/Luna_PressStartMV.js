@@ -2,7 +2,7 @@
 // Luna_PressStartMV.js
 //=============================================================================
 //=============================================================================
-// Build Date: 2020-09-04 18:46:04
+// Build Date: 2020-09-10 22:48:15
 //=============================================================================
 //=============================================================================
 // Made with LunaTea -- Haxe
@@ -88,11 +88,11 @@ class EReg {
 EReg.__name__ = true
 class LunaPressStart {
 	static main() {
-		let _this = $plugins
 		let _g = []
 		let _g1 = 0
-		while(_g1 < _this.length) {
-			let v = _this[_g1]
+		let _g2 = $plugins
+		while(_g1 < _g2.length) {
+			let v = _g2[_g1]
 			++_g1
 			if(new EReg("<LunaPressStart>","ig").match(v.description)) {
 				_g.push(v)
@@ -108,41 +108,48 @@ class LunaPressStart {
 		LunaPressStart.PressStartParams = { titleText : params["Start Text"], fontSize : tmp, enableFade : tmp1, fadeSpeed : tmp2, windowWidth : tmp3, windowHeight : tmp4, xPosition : tmp5, yPosition : parseInt(params["Window Y Position"],10)}
 		
 //=============================================================================
-// Scene_Title
+// Scene_Map
 //=============================================================================
       
-		let _SceneTitleCreate = Scene_Title.prototype["create"] 
-		Scene_Title.prototype["create"] = function() {
-			let STitle = this
-			_SceneTitleCreate.call(STitle)
-			return STitle.createStartWindow();
+		let _SceneMapCreateAllWindows = Scene_Map.prototype["createAllWindows"] 
+		Scene_Map.prototype.createAllWindows = function() {
+			_SceneMapCreateAllWindows.call(this)
+			this.createStartWindow()
 		}
-		Scene_Title.prototype["createStartWindow"] = function() {
-			let STitle = this
+		Scene_Map.prototype["createStartWindow"] = function() {
+			let SMap = this
 			let PSParams1 = LunaPressStart.PressStartParams
-			STitle._windowStart = new LTWindowStart(PSParams1.xPosition,PSParams1.yPosition,PSParams1.windowWidth,PSParams1.windowHeight)
-			return STitle.addWindow(STitle._windowStart);
+			SMap._windowStart = new LTWindowStart(PSParams1.xPosition,PSParams1.yPosition,PSParams1.windowWidth,PSParams1.windowHeight)
+			return SMap.addWindow(SMap._windowStart);
 		}
-		let _SceneTitleIsBusy = Scene_Title.prototype["isBusy"] 
-		Scene_Title.prototype["isBusy"] = function() {
-			let STitle = this
-			if(!STitle._windowStart.isOpen()) {
-				return _SceneTitleIsBusy.call(STitle);
+		let _SceneMapIsBusy = Scene_Map.prototype["isBusy"] 
+		Scene_Map.prototype["isBusy"] = function() {
+			let SMap = this
+			if(!SMap._windowStart.isOpen()) {
+				return _SceneMapIsBusy.call(SMap);
 			} else {
 				return true;
 			}
 		}
-		let _SceneTitleUpdate = Scene_Title.prototype["update"] 
-		Scene_Title.prototype["update"] = function() {
-			let STitle = this
-			_SceneTitleUpdate.call(STitle)
-			return STitle.processStart();
+		let _SceneMapUpdate = Scene_Map.prototype["update"] 
+		Scene_Map.prototype["update"] = function() {
+			let SMap = this
+			_SceneMapUpdate.call(SMap)
+			return SMap.processStart();
 		}
-		Scene_Title.prototype["processStart"] = function() {
-			let STitle = this
-			if(STitle._windowStart.isOpen() && (TouchInput.isPressed() || Input.isTriggered("ok"))) {
-				STitle._windowStart.close()
-				STitle._windowStart.deactivate()
+		Scene_Map.prototype["processStart"] = function() {
+			let SMap = this
+			if(SMap._windowStart.isOpen() && (TouchInput.isPressed() || Input.isTriggered("ok"))) {
+				SMap._windowStart.close()
+				SMap._windowStart.deactivate()
+			}
+		}
+		let _PlayerCanMove = Game_Player.prototype["canMove"] 
+		Game_Player.prototype.canMove = function() {
+			if(SceneManager._scene._windowStart != null && SceneManager._scene._windowStart.isOpen()) {
+				return false;
+			} else {
+				return _PlayerCanMove.call(this);
 			}
 		}
 	}
@@ -315,6 +322,12 @@ _$LTGlobals_$.__name__ = true
 class utils_Fn {
 	static proto(obj) {
 		return obj.prototype;
+	}
+	static updateProto(obj,fn) {
+		return (fn)(obj.prototype);
+	}
+	static updateEntity(obj,fn) {
+		return (fn)(obj);
 	}
 }
 utils_Fn.__name__ = true

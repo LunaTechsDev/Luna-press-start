@@ -1,5 +1,5 @@
 //=============================================================================
-// Luna_PressStart.js
+// Luna_PressStartMapMV.js
 //=============================================================================
 //=============================================================================
 // Build Date: 2020-09-10 22:48:15
@@ -157,10 +157,10 @@ class LunaPressStart {
 LunaPressStart.__name__ = true
 class LTWindowStart extends Window_Base {
 	constructor(x,y,width,height) {
-		super(new Rectangle(x,y,width,height))
+		super(x,y,width,height)
 	}
-	initialize(rect) {
-		super.initialize(rect)
+	initialize(x,y,width,height) {
+		super.initialize(x,y,width,height)
 		this.setBackgroundType(2)
 	}
 	update() {
