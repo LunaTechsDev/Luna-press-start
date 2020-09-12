@@ -2,7 +2,7 @@
 // Luna_PressStartMap.js
 //=============================================================================
 //=============================================================================
-// Build Date: 2020-09-10 22:48:15
+// Build Date: 2020-09-12 10:37:34
 //=============================================================================
 //=============================================================================
 // Made with LunaTea -- Haxe
@@ -24,6 +24,10 @@ menu <LunaPressStart>.
 * @param Font Size
 * @desc Size of the start text font.
 * @default 24
+*
+* @param Font Face
+* @desc Your Font File Name this should be in your fonts folder.
+* @default FiraSans-Ultra
 *
 * @param Fade Enable
 * @desc Disable/Enable 'fade' (T/F).
@@ -105,7 +109,15 @@ class LunaPressStart {
 		let tmp3 = parseInt(params["Window Width"],10)
 		let tmp4 = parseInt(params["Window Height"],10)
 		let tmp5 = parseInt(params["Window X Position"],10)
-		LunaPressStart.PressStartParams = { titleText : params["Start Text"], fontSize : tmp, enableFade : tmp1, fadeSpeed : tmp2, windowWidth : tmp3, windowHeight : tmp4, xPosition : tmp5, yPosition : parseInt(params["Window Y Position"],10)}
+		LunaPressStart.PressStartParams = { titleText : params["Start Text"], fontSize : tmp, enableFade : tmp1, fadeSpeed : tmp2, windowWidth : tmp3, windowHeight : tmp4, xPosition : tmp5, yPosition : parseInt(params["Window Y Position"],10), fontFace : params["Font Face"]}
+		console.log("src/LunaPressStart.hx:55:",LunaPressStart.PressStartParams.fontFace)
+		
+//=============================================================================
+// FontManager
+//=============================================================================
+      
+		FontManager.load(LunaPressStart.pressStartFont,LunaPressStart.PressStartParams.fontFace)
+		console.log("src/LunaPressStart.hx:58:",FontManager)
 		
 //=============================================================================
 // Scene_Map
@@ -172,6 +184,7 @@ class LTWindowStart extends Window_Base {
 	}
 	drawStartText() {
 		let PSParams1 = LunaPressStart.PressStartParams
+		this.contents.fontFace = LunaPressStart.pressStartFont
 		this.contents.fontSize = PSParams1.fontSize
 		this.contentsWidth()
 		this.textWidth(PSParams1.titleText)
@@ -334,5 +347,6 @@ utils_Fn.__name__ = true
 String.__name__ = true
 Array.__name__ = true
 js_Boot.__toStr = ({ }).toString
+LunaPressStart.pressStartFont = "PressStartFont"
 LunaPressStart.main()
 })(typeof exports != "undefined" ? exports : typeof window != "undefined" ? window : typeof self != "undefined" ? self : this, {})

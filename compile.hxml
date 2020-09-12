@@ -24,22 +24,25 @@
 
 # Note you can call an hxml file inside an hxml file for build purposes.
 # For Compiling Separate JavaScript Files
---macro macros.MacroTools.includeJsLib("./src/LunaPressStartParams.js")
 -main LunaPressStart
 --each
 
 --next
+--macro macros.MacroTools.includeJsLib("./src/LunaPressStartParamsMZ.js")
 -js dist/Luna_PressStart.js
 # You can include plugin parameters as a macro in your compile.hxml
 --next
+--macro macros.MacroTools.includeJsLib("./src/LunaPressStartParams.js")
 -D compileMV
 -js dist/Luna_PressStartMV.js
 
 --next
+--macro macros.MacroTools.includeJsLib("./src/LunaPressStartParamsMZ.js")
 -D mapMode
 -js dist/Luna_PressStartMap.js
 
 --next
+--macro macros.MacroTools.includeJsLib("./src/LunaPressStartParams.js")
 -D mapMode
 -D compileMV
 -js dist/Luna_PressStartMapMV.js

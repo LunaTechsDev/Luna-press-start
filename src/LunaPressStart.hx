@@ -22,10 +22,15 @@ typedef PSParams = {
  var windowHeight: Int;
  var xPosition: Int;
  var yPosition: Int;
+ #if !compileMV
+ var fontFace: String;
+ #end
 };
 
 class LunaPressStart {
  public static var PressStartParams: PSParams = null;
+
+ public static var pressStartFont: String = "PressStartFont";
 
  public static function main() {
   var params = Globals.Plugins.filter((plugin) -> {
@@ -40,8 +45,18 @@ class LunaPressStart {
    windowWidth: Fn.parseIntJs(params["Window Width"]),
    windowHeight: Fn.parseIntJs(params["Window Height"]),
    xPosition: Fn.parseIntJs(params["Window X Position"]),
-   yPosition: Fn.parseIntJs(params["Window Y Position"])
+   yPosition: Fn.parseIntJs(params["Window Y Position"]),
+   #if !compileMV
+   fontFace: (params['Font Face'])
+   #end
   };
+
+  #if !compileMV
+  trace(PressStartParams.fontFace);
+  Comment.title("FontManager");
+  untyped FontManager.load(pressStartFont, PressStartParams.fontFace);
+  untyped trace(FontManager);
+  #end
 
   #if !mapMode
   Comment.title("Scene_Title");
@@ -167,6 +182,9 @@ class LTWindowStart extends Window_Base {
 
   public function drawStartText() {
    var PSParams = LunaPressStart.PressStartParams;
+   #if !compileMV
+   this.contents.fontFace = LunaPressStart.pressStartFont;
+   #end
    this.contents.fontSize = PSParams.fontSize;
    var xpos = (this.contentsWidth() / 2)
     - (this.textWidth(PSParams.titleText) / 2);
