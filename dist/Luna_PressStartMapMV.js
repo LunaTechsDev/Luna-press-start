@@ -2,7 +2,7 @@
 // Luna_PressStartMapMV.js
 //=============================================================================
 //=============================================================================
-// Build Date: 2020-09-12 10:37:34
+// Build Date: 2020-09-14 18:56:55
 //=============================================================================
 //=============================================================================
 // Made with LunaTea -- Haxe
@@ -120,12 +120,16 @@ class LunaPressStart {
 			let SMap = this
 			let PSParams1 = LunaPressStart.PressStartParams
 			SMap._windowStart = new LTWindowStart(PSParams1.xPosition,PSParams1.yPosition,PSParams1.windowWidth,PSParams1.windowHeight)
-			return SMap.addWindow(SMap._windowStart);
+			if(LunaPressStart.pressedStart == true) {
+				return SMap._windowStart.close();
+			} else {
+				return SMap.addWindow(SMap._windowStart);
+			}
 		}
 		let _SceneMapIsBusy = Scene_Map.prototype["isBusy"] 
 		Scene_Map.prototype["isBusy"] = function() {
 			let SMap = this
-			if(!SMap._windowStart.isOpen()) {
+			if(!(SMap._windowStart.isOpen() && LunaPressStart.pressedStart == false)) {
 				return _SceneMapIsBusy.call(SMap);
 			} else {
 				return true;
@@ -142,11 +146,12 @@ class LunaPressStart {
 			if(SMap._windowStart.isOpen() && (TouchInput.isPressed() || Input.isTriggered("ok"))) {
 				SMap._windowStart.close()
 				SMap._windowStart.deactivate()
+				LunaPressStart.pressedStart = true
 			}
 		}
 		let _PlayerCanMove = Game_Player.prototype["canMove"] 
 		Game_Player.prototype.canMove = function() {
-			if(SceneManager._scene._windowStart != null && SceneManager._scene._windowStart.isOpen()) {
+			if(SceneManager._scene._windowStart != null && (SceneManager._scene._windowStart.isOpen() && LunaPressStart.pressedStart == false)) {
 				return false;
 			} else {
 				return _PlayerCanMove.call(this);
@@ -334,5 +339,6 @@ utils_Fn.__name__ = true
 String.__name__ = true
 Array.__name__ = true
 js_Boot.__toStr = ({ }).toString
+LunaPressStart.pressedStart = false
 LunaPressStart.main()
 })(typeof exports != "undefined" ? exports : typeof window != "undefined" ? window : typeof self != "undefined" ? self : this, {})

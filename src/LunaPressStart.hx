@@ -29,7 +29,9 @@ typedef PSParams = {
 
 class LunaPressStart {
  public static var PressStartParams: PSParams = null;
-
+ #if mapMode
+ public static var pressedStart: Bool = false;
+ #end
  public static var pressStartFont: String = "PressStartFont";
 
  public static function main() {
@@ -110,13 +112,18 @@ class LunaPressStart {
    var PSParams = LunaPressStart.PressStartParams;
    SMap._windowStart = new LTWindowStart(PSParams.xPosition,
     PSParams.yPosition, PSParams.windowWidth, PSParams.windowHeight);
-   SMap.addWindow(SMap._windowStart);
+   if (pressedStart == true) {
+    untyped SMap._windowStart.close();
+   } else {
+    SMap.addWindow(SMap._windowStart);
+   }
   });
 
   var _SceneMapIsBusy: JsFn = Fn.getPrProp(Scene_Map, "isBusy");
   Fn.setPrProp(Scene_Map, "isBusy", () -> {
    var SMap: Dynamic = Fn.self;
-   return SMap._windowStart.isOpen() || _SceneMapIsBusy.call(SMap);
+   return (SMap._windowStart.isOpen() && pressedStart == false)
+    || _SceneMapIsBusy.call(SMap);
   });
 
   var _SceneMapUpdate: JsFn = cast Fn.getPrProp(Scene_Map, "update");
@@ -132,13 +139,15 @@ class LunaPressStart {
     && (TouchInput.isPressed() || Input.isTriggered("ok"))) {
     SMap._windowStart.close();
     SMap._windowStart.deactivate();
+    pressedStart = true;
    }
   });
 
   var _PlayerCanMove: JsFn = Fn.getPrProp(Game_Player, "canMove");
   Fn.proto(Game_Player).canMoveD = () -> {
    if (untyped Amaryllis.currentScene()._windowStart != null
-    && untyped Amaryllis.currentScene()._windowStart.isOpen()) {
+    && untyped Amaryllis.currentScene()._windowStart.isOpen()
+     && pressedStart == false) {
     return false;
    } else {
     return _PlayerCanMove.call(Fn.self);
