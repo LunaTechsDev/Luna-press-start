@@ -181,55 +181,55 @@ class LTWindowStart extends Window_Base {
 
   this.setBackgroundType(2);
  }
-  public override function update() {
-   super.update();
-   if (LunaPressStart.PressStartParams.enableFade) {
-    this.processFade();
-    this.refresh();
-   }
+ public override function update() {
+  super.update();
+  if (LunaPressStart.PressStartParams.enableFade) {
+   this.processFade();
+   this.refresh();
   }
+ }
 
-  public function drawStartText() {
-   var PSParams = LunaPressStart.PressStartParams;
-   #if !compileMV
-   this.contents.fontFace = LunaPressStart.pressStartFont;
-   #end
-   this.contents.fontSize = PSParams.fontSize;
-   var xpos = (this.contentsWidth() / 2)
-    - (this.textWidth(PSParams.titleText) / 2);
-   this.drawText(PSParams.titleText, 0, 0, this.contentsWidth(), 'center');
-   this.resetFontSettings();
-  }
+ public function drawStartText() {
+  var PSParams = LunaPressStart.PressStartParams;
+  #if !compileMV
+  this.contents.fontFace = LunaPressStart.pressStartFont;
+  #end
+  this.contents.fontSize = PSParams.fontSize;
+  var xpos = (this.contentsWidth() / 2)
+   - (this.textWidth(PSParams.titleText) / 2);
+  this.drawText(PSParams.titleText, 0, 0, this.contentsWidth(), 'center');
+  this.resetFontSettings();
+ }
 
-  public function processFade() {
-   switch (this._visible) {
-    case true:
-     this.fadeOut();
-    case false:
-     this.fadeIn();
-   }
+ public function processFade() {
+  switch (this._visible) {
+   case true:
+    this.fadeOut();
+   case false:
+    this.fadeIn();
   }
+ }
 
-  public function refresh() {
-   if (this.contents != null) {
-    this.contents.clear();
-    this.drawStartText();
-   }
+ public function refresh() {
+  if (this.contents != null) {
+   this.contents.clear();
+   this.drawStartText();
   }
+ }
 
-  public function fadeOut() {
-   this.contentsOpacity -= LunaPressStart.PressStartParams.fadeSpeed;
-   this.contentsOpacity = this.contentsOpacity.clampf(0, 255);
-   if (this.contentsOpacity == 0) {
-    this._visible = false;
-   }
+ public function fadeOut() {
+  this.contentsOpacity -= LunaPressStart.PressStartParams.fadeSpeed;
+  this.contentsOpacity = this.contentsOpacity.clampf(0, 255);
+  if (this.contentsOpacity == 0) {
+   this._visible = false;
   }
+ }
 
-  public function fadeIn() {
-   this.contentsOpacity += LunaPressStart.PressStartParams.fadeSpeed;
-   this.contentsOpacity = this.contentsOpacity.clampf(0, 255);
-   if (this.contentsOpacity == 255) {
-    this._visible = true;
-   }
+ public function fadeIn() {
+  this.contentsOpacity += LunaPressStart.PressStartParams.fadeSpeed;
+  this.contentsOpacity = this.contentsOpacity.clampf(0, 255);
+  if (this.contentsOpacity == 255) {
+   this._visible = true;
   }
+ }
 }

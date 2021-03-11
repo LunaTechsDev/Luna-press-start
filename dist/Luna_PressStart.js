@@ -2,7 +2,7 @@
 // Luna_PressStart.js
 //=============================================================================
 //=============================================================================
-// Build Date: 2020-09-14 18:56:55
+// Build Date: 2021-03-10 19:41:33
 //=============================================================================
 //=============================================================================
 // Made with LunaTea -- Haxe
@@ -120,53 +120,41 @@ class LunaPressStart {
 		console.log("src/LunaPressStart.hx:60:",FontManager)
 		
 //=============================================================================
-// Scene_Map
+// Scene_Title
 //=============================================================================
       
-		let _SceneMapCreateAllWindows = Scene_Map.prototype["createAllWindows"] 
-		Scene_Map.prototype.createAllWindows = function() {
-			_SceneMapCreateAllWindows.call(this)
-			this.createStartWindow()
+		let _SceneTitleCreate = Scene_Title.prototype["create"] 
+		Scene_Title.prototype["create"] = function() {
+			let STitle = this
+			_SceneTitleCreate.call(STitle)
+			return STitle.createStartWindow();
 		}
-		Scene_Map.prototype["createStartWindow"] = function() {
-			let SMap = this
+		Scene_Title.prototype["createStartWindow"] = function() {
+			let STitle = this
 			let PSParams1 = LunaPressStart.PressStartParams
-			SMap._windowStart = new LTWindowStart(PSParams1.xPosition,PSParams1.yPosition,PSParams1.windowWidth,PSParams1.windowHeight)
-			if(LunaPressStart.pressedStart == true) {
-				return SMap._windowStart.close();
-			} else {
-				return SMap.addWindow(SMap._windowStart);
-			}
+			STitle._windowStart = new LTWindowStart(PSParams1.xPosition,PSParams1.yPosition,PSParams1.windowWidth,PSParams1.windowHeight)
+			return STitle.addWindow(STitle._windowStart);
 		}
-		let _SceneMapIsBusy = Scene_Map.prototype["isBusy"] 
-		Scene_Map.prototype["isBusy"] = function() {
-			let SMap = this
-			if(!(SMap._windowStart.isOpen() && LunaPressStart.pressedStart == false)) {
-				return _SceneMapIsBusy.call(SMap);
+		let _SceneTitleIsBusy = Scene_Title.prototype["isBusy"] 
+		Scene_Title.prototype["isBusy"] = function() {
+			let STitle = this
+			if(!STitle._windowStart.isOpen()) {
+				return _SceneTitleIsBusy.call(STitle);
 			} else {
 				return true;
 			}
 		}
-		let _SceneMapUpdate = Scene_Map.prototype["update"] 
-		Scene_Map.prototype["update"] = function() {
-			let SMap = this
-			_SceneMapUpdate.call(SMap)
-			return SMap.processStart();
+		let _SceneTitleUpdate = Scene_Title.prototype["update"] 
+		Scene_Title.prototype["update"] = function() {
+			let STitle = this
+			_SceneTitleUpdate.call(STitle)
+			return STitle.processStart();
 		}
-		Scene_Map.prototype["processStart"] = function() {
-			let SMap = this
-			if(SMap._windowStart.isOpen() && (TouchInput.isPressed() || Input.isTriggered("ok"))) {
-				SMap._windowStart.close()
-				SMap._windowStart.deactivate()
-				LunaPressStart.pressedStart = true
-			}
-		}
-		let _PlayerCanMove = Game_Player.prototype["canMove"] 
-		Game_Player.prototype.canMove = function() {
-			if(SceneManager._scene._windowStart != null && (SceneManager._scene._windowStart.isOpen() && LunaPressStart.pressedStart == false)) {
-				return false;
-			} else {
-				return _PlayerCanMove.call(this);
+		Scene_Title.prototype["processStart"] = function() {
+			let STitle = this
+			if(STitle._windowStart.isOpen() && (TouchInput.isPressed() || Input.isTriggered("ok"))) {
+				STitle._windowStart.close()
+				STitle._windowStart.deactivate()
 			}
 		}
 	}
@@ -352,7 +340,6 @@ utils_Fn.__name__ = true
 String.__name__ = true
 Array.__name__ = true
 js_Boot.__toStr = ({ }).toString
-LunaPressStart.pressedStart = false
 LunaPressStart.pressStartFont = "PressStartFont"
 LunaPressStart.main()
 })(typeof exports != "undefined" ? exports : typeof window != "undefined" ? window : typeof self != "undefined" ? self : this, {})

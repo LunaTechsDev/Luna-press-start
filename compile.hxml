@@ -18,7 +18,7 @@
 # -D doc_gen
 # -D js_classic
 -dce full
--D mapMode
+
 
 # RM Version for Conditional Compilation
 
@@ -29,10 +29,12 @@
 
 --next
 --macro macros.MacroTools.includeJsLib("./src/LunaPressStartParamsMZ.js")
+
 -js dist/Luna_PressStart.js
 # You can include plugin parameters as a macro in your compile.hxml
 --next
 --macro macros.MacroTools.includeJsLib("./src/LunaPressStartParams.js")
+
 -D compileMV
 -js dist/Luna_PressStartMV.js
 
