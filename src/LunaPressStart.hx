@@ -171,8 +171,8 @@ class LTWindowStart extends Window_Base {
  }
 
  #if compileMV
- public override function initialize(?x: Int, ?y: Int, ?width: Int,
-   ?height: Int) {
+ public override function initialize(?x: Float, ?y: Float, ?width: Float,
+   ?height: Float) {
   super.initialize(x, y, width, height);
  #else
  public override function initialize(rect: Rectangle) {
